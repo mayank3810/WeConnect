@@ -4,10 +4,10 @@
     "slug": "WeConnect",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "/src/assets/images/logo/big_dark.png",
+    "icon": "./src/assets/images/logo/big_dark.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "/src/assets/images/logo/big_dark.png",
+      "image": "./src/assets/images/logo/big_dark.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,12 +17,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "/src/assets/images/logo/big_dark.png",
+        "foregroundImage": "./src/assets/images/logo/big_dark.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mayank3810.WeConnect"
     },
+    "plugins": ["@react-native-google-signin/google-signin"],
     "web": {
-      "favicon": "/src/assets/images/logo/big_dark.png"
+      "favicon": "./src/assets/images/logo/big_dark.png"
     }
   }
 }

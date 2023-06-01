@@ -8,6 +8,9 @@ import {
   Button,
   TextInput,
   BackHandler,
+  Alert,
+  ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Background from "../components/Background";
@@ -19,22 +22,30 @@ import Animated, {
   FadeOutUp,
   SlideInUp,
 } from "react-native-reanimated";
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { userLogin } from "../redux/userSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Login = () => {
+const Login = ({ navigation }) => {
   const { height, width } = Dimensions.get("window");
 
   const [show, setShow] = useState(false);
+  const [email, setEmail] = useState(false);
+  const [password, setPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const backAction = () => {
-      Alert.alert("Hold on!", "Are you sure you want to go back?", [
-        {
-          text: "Cancel",
-          onPress: () => null,
-          style: "cancel",
-        },
-        { text: "YES", onPress: () => BackHandler.exitApp() },
-      ]);
+      setShow(false);
       return true;
     };
 
@@ -46,10 +57,82 @@ const Login = () => {
     return () => backHandler.remove();
   }, []);
 
+  const loginIn = () => {
+    setLoading(true);
+    console.log("Login");
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        setLoading(false);
+        const user = userCredential.user;
+        await AsyncStorage.setItem("user", user.providerData);
+        dispatch(
+          userLogin({
+            user: user.providerData,
+          })
+        );
+        navigation.navigate("Home");
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error.message);
+        console.log(error);
+        ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      });
+  };
+
+  const loginWithGoogle = () => {
+    // const auth = getAuth();
+    // const provider = new GoogleAuthProvider();
+    // signInWithPopup(auth, provider)
+    //   .then((result) => {
+    //     // // This gives you a Google Access Token. You can use it to access the Google API.
+    //     // const credential = GoogleAuthProvider.credentialFromResult(result);
+    //     // const token = credential.accessToken;
+    //     // // The signed-in user info.
+    //     const user = result.user;
+    //     console.log(user.email);
+    //     // IdP data available using getAdditionalUserInfo(result)
+    //     // ...
+    //   })
+    //   .catch((error) => {
+    //     // // Handle Errors here.
+    //     // const errorCode = error.code;
+    //     // const errorMessage = error.message;
+    //     // // The email of the user's account used.
+    //     // const email = error.customData.email;
+    //     // // The AuthCredential type that was used.
+    //     // const credential = GoogleAuthProvider.credentialFromError(error);
+    //     // // ...
+    //     console.log("Something Went Wrong");
+    //   });
+
+    setLoading(true);
+    console.log("Login");
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setLoading(false);
+        const user = userCredential.user;
+        console.log(user);
+        navigation.navigate("Home");
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error.message);
+        console.log(error);
+        ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      });
+  };
+
   return (
     <Background>
       {!show && (
-        <Animated.View style={view.center} exiting={FadeOutUp}>
+        <Animated.View
+          style={view.center}
+          exiting={FadeOutUp}
+          entering={FadeInUp}
+        >
           <Image
             source={require("../assets/images/logo/light.png")}
             style={{ resizeMode: "contain", width: "70%", height: 70 }}
@@ -100,31 +183,41 @@ const Login = () => {
             }}
           />
           <View style={[styles.mt40, styles.m10]}>
-            <TextInput style={styles.text_input} placeholder="Email" />
+            <TextInput
+              style={styles.text_input}
+              placeholder="Email"
+              onChangeText={(text) => setEmail(text)}
+            />
             <TextInput
               style={styles.text_input}
               placeholder="Password"
-              textContentType="password"
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
             />
             {/* <TouchableOpacity>
               <Text style={text.h3_blue}>Forgot Password ?</Text>
             </TouchableOpacity> */}
-            <TouchableOpacity
-              onPress={() => {
-                setShow(!show);
-              }}
-              style={[styles.btn]}
-            >
-              <Text style={text.white}>Login</Text>
+            <TouchableOpacity onPress={loginIn} style={[styles.btn]}>
+              <Text style={text.white}>
+                {loading ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  "Login"
+                )}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => {
-                setShow(!show);
-              }}
+              onPress={loginWithGoogle}
               style={[styles.btn, styles.mt20]}
             >
-              <Text style={text.white}>Login with google</Text>
+              <Text style={text.white}>
+                {loading ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  "Register"
+                )}
+              </Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
