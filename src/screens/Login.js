@@ -17,8 +17,10 @@ import Background from "../components/Background";
 import { image, styles, text, view } from "../assets/styles/style";
 import Animated, {
   FadeIn,
+  FadeInDown,
   FadeInUp,
   FadeOut,
+  FadeOutDown,
   FadeOutUp,
   SlideInUp,
 } from "react-native-reanimated";
@@ -32,8 +34,9 @@ import {
 import { useDispatch } from "react-redux";
 import { userLogin } from "../redux/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
-const Login = ({ navigation }) => {
+const Login = () => {
   const { height, width } = Dimensions.get("window");
 
   const [show, setShow] = useState(false);
@@ -57,6 +60,8 @@ const Login = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
+  const navigation = useNavigation();
+
   const loginIn = () => {
     setLoading(true);
     console.log("Login");
@@ -65,13 +70,14 @@ const Login = ({ navigation }) => {
       .then(async (userCredential) => {
         setLoading(false);
         const user = userCredential.user;
-        await AsyncStorage.setItem("user", user.providerData);
+        await AsyncStorage.setItem("user", JSON.stringify(user.providerData));
         dispatch(
           userLogin({
             user: user.providerData,
           })
         );
-        navigation.navigate("Home");
+        console.log(user.providerData);
+        // navigation.navigate("Main", { screen: "Home" });
       })
       .catch((error) => {
         setLoading(false);
@@ -115,7 +121,7 @@ const Login = ({ navigation }) => {
         setLoading(false);
         const user = userCredential.user;
         console.log(user);
-        navigation.navigate("Home");
+        navigation.navigate("RootStack", { screen: "Home" });
       })
       .catch((error) => {
         setLoading(false);
@@ -159,68 +165,80 @@ const Login = ({ navigation }) => {
       )}
 
       {show && (
-        <Animated.View
-          style={{
-            height: height / 1.6,
-            width: width,
-            backgroundColor: "#fff",
-            position: "absolute",
-            bottom: 0,
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
-            alignSelf: "center",
-          }}
-          entering={FadeIn}
-        >
-          <Image
-            source={require("../assets/images/logo/dark.png")}
+        <>
+          <Animated.Image
+            source={require("../assets/images/login-bg.png")}
             style={{
+              width: "115%",
               resizeMode: "contain",
-              width: "70%",
-              height: 70,
-              alignSelf: "center",
-              marginTop: 20,
+              top: -height / 3.4,
             }}
+            exiting={FadeOutDown}
+            entering={FadeInDown}
           />
-          <View style={[styles.mt40, styles.m10]}>
-            <TextInput
-              style={styles.text_input}
-              placeholder="Email"
-              onChangeText={(text) => setEmail(text)}
+          <Animated.View
+            style={{
+              height: height / 1.6,
+              width: width,
+              backgroundColor: "#fff",
+              position: "absolute",
+              bottom: 0,
+              borderTopLeftRadius: 30,
+              borderTopRightRadius: 30,
+              alignSelf: "center",
+            }}
+            entering={FadeIn}
+          >
+            <Image
+              source={require("../assets/images/logo/dark.png")}
+              style={{
+                resizeMode: "contain",
+                width: "70%",
+                height: 70,
+                alignSelf: "center",
+                marginTop: 20,
+              }}
             />
-            <TextInput
-              style={styles.text_input}
-              placeholder="Password"
-              secureTextEntry={true}
-              onChangeText={(text) => setPassword(text)}
-            />
-            {/* <TouchableOpacity>
+            <View style={[styles.mt40, styles.m10]}>
+              <TextInput
+                style={styles.text_input}
+                placeholder="Email"
+                onChangeText={(text) => setEmail(text)}
+              />
+              <TextInput
+                style={styles.text_input}
+                placeholder="Password"
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
+              />
+              {/* <TouchableOpacity>
               <Text style={text.h3_blue}>Forgot Password ?</Text>
             </TouchableOpacity> */}
-            <TouchableOpacity onPress={loginIn} style={[styles.btn]}>
-              <Text style={text.white}>
-                {loading ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  "Login"
-                )}
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity onPress={loginIn} style={[styles.btn]}>
+                <Text style={text.white}>
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    "Login"
+                  )}
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={loginWithGoogle}
-              style={[styles.btn, styles.mt20]}
-            >
-              <Text style={text.white}>
-                {loading ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  "Register"
-                )}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
+              <TouchableOpacity
+                onPress={loginWithGoogle}
+                style={[styles.btn, styles.mt20]}
+              >
+                <Text style={text.white}>
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    "Register"
+                  )}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </>
       )}
     </Background>
   );
