@@ -32,7 +32,9 @@
     "react-native-web": "~0.18.10",
     "react-redux": "^8.0.7",
     "redux-devtools-extension": "^2.13.9",
-    "remote-redux-devtools": "^0.5.0"
+    "remote-redux-devtools": "^0.5.0",
+    "expo-image-picker": "~14.1.1",
+    "undefined": "firebase/storage"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

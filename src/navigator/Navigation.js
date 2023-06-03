@@ -88,6 +88,7 @@ const Navigation = () => {
       //   />
       // </MainStack.Navigator>
       <TabView
+        sceneContainerStyle={{ backgroundColor: "#fff" }}
         navigationState={{ index, routes }}
         renderScene={renderScene}
         onIndexChange={setIndex}
@@ -100,7 +101,11 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator>
+      <RootStack.Navigator
+        screenOptions={{
+          cardStyle: { backgroundColor: "#fff" },
+        }}
+      >
         {currentUser ? (
           <RootStack.Screen
             name="Main"

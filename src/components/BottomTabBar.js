@@ -8,7 +8,7 @@ import IconFeather from "react-native-vector-icons/Feather";
 
 const BottomTabBar = (props) => {
   useEffect(() => {
-    console.log(props);
+    // console.log(props);
   }, []);
 
   const iconSize = 28;

@@ -4,6 +4,9 @@ const { height, width } = Dimensions.get("window");
 
 const blueDark = "#5151C6";
 const blueLight = "#888BF4";
+export const colorSecondary = "#BDBDBD";
+export const iconColor = "#212121";
+export const redColor = "#FA6650";
 
 const text = StyleSheet.create({
   p: {
@@ -13,6 +16,8 @@ const text = StyleSheet.create({
   title: {
     fontSize: 20,
     color: "#212121",
+    textTransform: "uppercase",
+    fontWeight: 700,
   },
   h3_blue: {
     fontSize: 16,
@@ -44,6 +49,15 @@ const view = StyleSheet.create({
 const styles = StyleSheet.create({
   m10: {
     margin: 10,
+  },
+  ml10: {
+    marginLeft: 10,
+  },
+  mr10: {
+    marginRight: 10,
+  },
+  mv5: {
+    marginVertical: 5,
   },
   mt20: {
     marginTop: 20,
@@ -94,24 +108,64 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   contentContainer: {
-    flex: 1, // pushes the footer to the end of the screen
+    // flex: 1,
+    marginHorizontal: 10,
+    marginTop: 10,
   },
   footer: {
-    flex: 0,
     backgroundColor: "#F6F7F9",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 18,
-      height: 18,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 20.0,
-    elevation: 24,
-    borderTopLeftRadius: 23,
-    borderTopRightRadius: 23,
+    // shadowColor: "#000000",
+    // shadowOffset: {
+    //   width: 18,
+    //   height: 18,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 20.0,
+    // elevation: 24,
+    // borderTopLeftRadius: 50,
+    // borderTopRightRadius: 50,
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+    paddingTop: 50,
+    // backgroundColor: "#F6F7F9",
+    // shadowColor: "#000000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 18,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 20.0,
+    // elevation: 3,
+  },
+  imagePicker: {
+    backgroundColor: "#F1F1FE",
+    justifyContent: "center",
+    alignItems: "center",
+    // height: height / 2,
+    aspectRatio: 1,
+    borderWidth: 1,
+    borderColor: colorSecondary,
+    borderStyle: "dashed",
+  },
+  text_input_color: {
+    backgroundColor: "#F1F1FE",
+    // marginVertical: 15,
+    // paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    color: "#303030",
+    // fontWeight: "700",
+    fontSize: 16,
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    paddingTop: 0,
   },
 });
 

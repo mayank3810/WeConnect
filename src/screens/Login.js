@@ -120,6 +120,7 @@ const Login = () => {
       .then((userCredential) => {
         setLoading(false);
         const user = userCredential.user;
+
         console.log(user);
         navigation.navigate("RootStack", { screen: "Home" });
       })
