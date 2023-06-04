@@ -2,8 +2,8 @@ import { Dimensions, StyleSheet } from "react-native";
 
 const { height, width } = Dimensions.get("window");
 
-const blueDark = "#5151C6";
-const blueLight = "#888BF4";
+export const blueDark = "#5151C6";
+export const blueLight = "#888BF4";
 export const colorSecondary = "#BDBDBD";
 export const iconColor = "#212121";
 export const redColor = "#FA6650";
@@ -23,7 +23,7 @@ const text = StyleSheet.create({
     fontSize: 16,
     fontWeight: 700,
     textTransform: "uppercase",
-    color: "#888BF4",
+    color: blueDark,
   },
   subtitle: {
     fontSize: 18,
@@ -166,6 +166,31 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     paddingTop: 0,
+  },
+  profile_card: {
+    position: "relative",
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    // height: 130,
+    backgroundColor: "#F3F5F7",
+    // flexDirection: "row",
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 18,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 20.0,
+    elevation: 3,
+  },
+  user_posts: {
+    width: "31%",
+    height: "31%",
+    aspectRatio: 1,
+    margin: 1,
+
+    // marginTop: 20,
   },
 });
 

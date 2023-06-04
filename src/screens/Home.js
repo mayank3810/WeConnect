@@ -9,7 +9,7 @@ import Post from "../components/Post";
 import Header from "../components/Header";
 import IconIonic from "react-native-vector-icons/Ionicons";
 import { db } from "../../firebase";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { ActivityIndicator } from "react-native";
 
 const Home = ({ navigation }) => {
@@ -31,7 +31,7 @@ const Home = ({ navigation }) => {
 
   const getPosts = async () => {
     console.log("Getting Posts");
-    const q = query(collection(db, "posts"));
+    const q = query(collection(db, "posts"), orderBy("date", "desc"));
 
     const querySnapshot = await getDocs(q);
     if (querySnapshot) {

@@ -12,6 +12,7 @@ import Camera from "../screens/Camera";
 import Profile from "../screens/Profile";
 import BottomTabBar from "../components/BottomTabBar";
 import AddPost from "../screens/AddPost";
+import Register from "../screens/Register";
 
 const AuthStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
@@ -55,6 +56,11 @@ const Navigation = () => {
         <AuthStack.Screen
           name="Login"
           component={Login}
+          options={{ headerShown: false }}
+        />
+        <AuthStack.Screen
+          name="Register"
+          component={Register}
           options={{ headerShown: false }}
         />
       </AuthStack.Navigator>

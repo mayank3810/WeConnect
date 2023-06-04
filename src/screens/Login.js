@@ -35,6 +35,8 @@ import { useDispatch } from "react-redux";
 import { userLogin } from "../redux/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { doc, getDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const Login = () => {
   const { height, width } = Dimensions.get("window");
@@ -68,15 +70,28 @@ const Login = () => {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
-        setLoading(false);
-        const user = userCredential.user;
-        await AsyncStorage.setItem("user", JSON.stringify(user.providerData));
-        dispatch(
-          userLogin({
-            user: user.providerData,
-          })
-        );
-        console.log(user.providerData);
+        const docRef = doc(db, "users", userCredential.user.email);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+          await AsyncStorage.setItem("user", JSON.stringify(docSnap.data()));
+          dispatch(
+            userLogin({
+              user: docSnap.data(),
+            })
+          );
+          setLoading(false);
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+          ToastAndroid.show("User Not Found", ToastAndroid.SHORT);
+          setLoading(false);
+        }
+
+        // const user = userCredential.user;
+
+        // console.log(user.providerData);
         // navigation.navigate("Main", { screen: "Home" });
       })
       .catch((error) => {
@@ -116,6 +131,22 @@ const Login = () => {
     setLoading(true);
     console.log("Login");
     const auth = getAuth();
+
+    const user = {
+      address: "",
+      bio: "",
+      createdAt: serverTimestamp(),
+      email: email,
+      followers: [],
+      following: [],
+      intrests: [],
+      name: "",
+      phone: "",
+      posts: [],
+      profileImg: "",
+      username: "",
+    };
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setLoading(false);
@@ -226,16 +257,13 @@ const Login = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={loginWithGoogle}
+                onPress={() => {
+                  setShow(true);
+                  navigation.navigate("Auth", { screen: "Register" });
+                }}
                 style={[styles.btn, styles.mt20]}
               >
-                <Text style={text.white}>
-                  {loading ? (
-                    <ActivityIndicator size="small" color="#fff" />
-                  ) : (
-                    "Register"
-                  )}
-                </Text>
+                <Text style={text.white}>Register</Text>
               </TouchableOpacity>
             </View>
           </Animated.View>

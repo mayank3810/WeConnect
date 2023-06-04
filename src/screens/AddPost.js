@@ -44,6 +44,7 @@ const AddPost = () => {
   const [loading, setLoading] = useState(false);
   const [imageRef, setImageRef] = useState(null);
   const userId = useSelector((state) => state.currentUser[0]?.uid);
+  const currentUser = useSelector((state) => state.currentUser);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -81,6 +82,7 @@ const AddPost = () => {
 
   const addPost = async () => {
     console.log("Add Post");
+    setLoading(true);
     const imageUrl = await getDownloadURL(imageRef);
     console.log("Image Caption ==> " + caption);
     console.log("Image Url ==> " + imageUrl);
@@ -92,16 +94,16 @@ const AddPost = () => {
       caption: caption,
       date: serverTimestamp(),
       postedBy: {
-        username: "test123",
-        profileImg: "https://image/",
-        name: "some",
-        userUid: "some",
+        username: currentUser.username,
+        profileImg: currentUser.profileImg ?? "",
+        name: currentUser.name,
+        userUid: currentUser.email,
       },
       likes: 0,
       comments: [],
     }).then(async (resp) => {
       console.log(resp.id);
-      const userPostsRef = doc(db, "users", userId);
+      const userPostsRef = doc(db, "users", currentUser.email.toLowerCase());
 
       updateDoc(userPostsRef, {
         posts: arrayUnion(resp.id),
@@ -109,6 +111,7 @@ const AddPost = () => {
         setImageRef(null);
         setImage(null);
         setCaption("");
+        setLoading(false);
         Alert.alert("Post Added");
       });
     });
